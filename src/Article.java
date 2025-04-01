@@ -19,4 +19,4 @@ public class Article {
     public double getPrixUnitaire() { return prixUnitaire; }
     public double getPrixVrac() { return prixVrac; }
     public int getQuantiteVrac() { return quantiteVrac; }
-}
+}gi
