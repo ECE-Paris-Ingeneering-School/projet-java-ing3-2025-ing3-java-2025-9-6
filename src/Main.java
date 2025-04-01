@@ -5,10 +5,8 @@ public class Main {
 
         System.out.println("test gael svp");
 
-        System.out.println("svp");
+        System.out.println("test final");
 
-        System.out.println("test");
-        System.out.println("test victor");
-
+        System.out.println("commit 8  svp");
     }
 }
