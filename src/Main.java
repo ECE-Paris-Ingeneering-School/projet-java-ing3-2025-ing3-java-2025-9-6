@@ -6,5 +6,9 @@ public class Main {
         System.out.println("test gael svp");
 
         System.out.println("svp");
+
+        System.out.println("test");
+        System.out.println("test victor");
+
     }
 }
