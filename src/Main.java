@@ -3,12 +3,7 @@ public class Main {
 
         DatabaseConnection.getConnection();
 
-        System.out.println("test");
-
-        System.out.println("test victor");
-
-        System.out.println("test gael encore encore     ");
-
+        System.out.println("test gael svp");
 
     }
 }
