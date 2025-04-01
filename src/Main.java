@@ -3,10 +3,12 @@ public class Main {
 
         DatabaseConnection.getConnection();
 
-<<<<<<< HEAD
+        System.out.println("test gael svp");
+
+        System.out.println("svp");
+
         System.out.println("test");
-=======
         System.out.println("test victor");
->>>>>>> a842e917e242714d95ed35abbd67edbd0c341a03
+
     }
 }
