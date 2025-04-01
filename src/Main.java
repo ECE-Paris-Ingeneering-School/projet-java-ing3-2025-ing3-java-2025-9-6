@@ -3,6 +3,6 @@ public class Main {
 
         DatabaseConnection.getConnection();
 
-        System.out.println("test");
+        System.out.println("test victor");
     }
 }
