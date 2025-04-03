@@ -11,6 +11,8 @@ public class Client {
         this.ancienClient = ancienClient;
     }
 
+    // Test commit Bat 
+
     // Getters et setters
     public int getId() { return id; }
     public String getNom() { return nom; }
