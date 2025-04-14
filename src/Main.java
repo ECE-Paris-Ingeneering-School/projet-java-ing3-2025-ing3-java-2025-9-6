@@ -9,6 +9,10 @@ public class Main {
                 ArticleDAO articleDAO = new ArticleDAO(connection);
                 CommandeDAO commandeDAO = new CommandeDAO(connection);
 
+                // Récupérer et afficher les utilisateurs
+                System.out.println("👤 Liste des utilisateurs :");
+                userDAO.getAllUsers().forEach(System.out::println);
+
 
     }
 }
