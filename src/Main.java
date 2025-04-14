@@ -17,6 +17,12 @@ public class Main {
                 System.out.println("\n🛒 Liste des articles :");
                 articleDAO.getAllArticles().forEach(System.out::println);
 
+                // Vérifier les commandes d'un client (exemple : Alice avec id = 1)
+                int clientId = 1;
+                int nbCommandes = commandeDAO.getNombreCommandesDerniers3Mois(clientId);
+                System.out.println("\n📦 Nombre de commandes des 3 derniers mois du client " + clientId + " : " + nbCommandes);
+            }
+
 
     }
 }
