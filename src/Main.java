@@ -13,6 +13,10 @@ public class Main {
                 System.out.println("👤 Liste des utilisateurs :");
                 userDAO.getAllUsers().forEach(System.out::println);
 
+                // Récupérer et afficher les articles
+                System.out.println("\n🛒 Liste des articles :");
+                articleDAO.getAllArticles().forEach(System.out::println);
+
 
     }
 }
