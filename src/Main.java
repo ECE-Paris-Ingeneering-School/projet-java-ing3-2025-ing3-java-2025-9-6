@@ -22,7 +22,9 @@ public class Main {
                 int nbCommandes = commandeDAO.getNombreCommandesDerniers3Mois(clientId);
                 System.out.println("\n📦 Nombre de commandes des 3 derniers mois du client " + clientId + " : " + nbCommandes);
             }
-
+            } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 }
