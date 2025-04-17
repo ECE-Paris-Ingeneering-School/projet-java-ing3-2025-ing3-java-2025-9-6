@@ -24,8 +24,31 @@ public class EcranPayement {
     private static void AfficherFenetreAdresse() {
         JFrame FenetreAdresseDeLivraison = new JFrame("Adresse de livraison");
         FenetreAdresseDeLivraison.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        FenetreAdresseDeLivraison.setSize(400, 300);
-        FenetreAdresseDeLivraison.setLayout(new GridLayout(6, 2, 5, 5));
+        FenetreAdresseDeLivraison.setSize(1000, 600);
+        FenetreAdresseDeLivraison.setLocationRelativeTo(null);
+
+        // Image de fond
+        ImageIcon imageDeFond = new ImageIcon("maps2.jpg");
+        JLabel labelImageFond = new JLabel(imageDeFond);
+        labelImageFond.setBounds(0, 0, 1000, 600);
+
+        // Panel transparent pour le contenu
+        JPanel panelContenu = new JPanel();
+        panelContenu.setLayout(null);
+        panelContenu.setOpaque(false);
+        panelContenu.setBounds(0, 0, 1000, 600);
+
+        // Titre
+        JLabel Titre = new JLabel("Remplissez vos informations");
+        Titre.setFont(new Font("SansSerif", Font.BOLD, 24));
+        Titre.setForeground(Color.BLACK);
+        Titre.setBounds(350, 10, 400, 30);
+        panelContenu.add(Titre);
+
+        // Panel pour les champs de formulaire
+        JPanel panelFormulaire = new JPanel(new GridLayout(6, 2, 10, 10));
+        panelFormulaire.setOpaque(false);
+        panelFormulaire.setBounds(200, 70, 600, 300);
 
         JComboBox<String> ListePaysPourSelection = new JComboBox<>(ListeDesPays);
         JTextField ChampPourVille = new JTextField();
@@ -34,18 +57,37 @@ public class EcranPayement {
         JTextField ChampPourDeuxiemeAdresse = new JTextField();
         JButton BoutonSuivantPourAdresse = new JButton("Suivant");
 
-        FenetreAdresseDeLivraison.add(new JLabel("Pays :"));
-        FenetreAdresseDeLivraison.add(ListePaysPourSelection);
-        FenetreAdresseDeLivraison.add(new JLabel("Ville :"));
-        FenetreAdresseDeLivraison.add(ChampPourVille);
-        FenetreAdresseDeLivraison.add(new JLabel("Code Postal :"));
-        FenetreAdresseDeLivraison.add(ChampPourCodePostal);
-        FenetreAdresseDeLivraison.add(new JLabel("Adresse :"));
-        FenetreAdresseDeLivraison.add(ChampPourAdresse);
-        FenetreAdresseDeLivraison.add(new JLabel("Compléments d'adresse (Optionnel) :"));
-        FenetreAdresseDeLivraison.add(ChampPourDeuxiemeAdresse);
-        FenetreAdresseDeLivraison.add(new JLabel());
-        FenetreAdresseDeLivraison.add(BoutonSuivantPourAdresse);
+        // Couleur verte pour les labels
+        Color vertLabel = new Color(0, 153, 76);
+
+        panelFormulaire.add(creerLabelVert("Pays :", vertLabel));
+        panelFormulaire.add(ListePaysPourSelection);
+        panelFormulaire.add(creerLabelVert("Ville :", vertLabel));
+        panelFormulaire.add(ChampPourVille);
+        panelFormulaire.add(creerLabelVert("Code Postal :", vertLabel));
+        panelFormulaire.add(ChampPourCodePostal);
+        panelFormulaire.add(creerLabelVert("Adresse :", vertLabel));
+        panelFormulaire.add(ChampPourAdresse);
+        panelFormulaire.add(creerLabelVert("Compléments d'adresse (Optionnel) :", vertLabel));
+        panelFormulaire.add(ChampPourDeuxiemeAdresse);
+        panelFormulaire.add(new JLabel()); // vide
+        panelFormulaire.add(BoutonSuivantPourAdresse);
+
+        // Style du bouton
+        BoutonSuivantPourAdresse.setBackground(new Color(0, 120, 215));
+        BoutonSuivantPourAdresse.setForeground(Color.WHITE);
+        BoutonSuivantPourAdresse.setFocusPainted(false);
+
+        // Ajout dans panel principal
+        panelContenu.add(panelFormulaire);
+
+        // Ajout au layeredPane
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setPreferredSize(new Dimension(1000, 600));
+        layeredPane.add(labelImageFond, Integer.valueOf(0));
+        layeredPane.add(panelContenu, Integer.valueOf(1));
+
+        FenetreAdresseDeLivraison.setContentPane(layeredPane);
 
         BoutonSuivantPourAdresse.addActionListener(e -> {
             if (ChampPourVille.getText().trim().isEmpty()) {
@@ -60,26 +102,65 @@ public class EcranPayement {
             }
         });
 
+        FenetreAdresseDeLivraison.pack();
         FenetreAdresseDeLivraison.setVisible(true);
+    }
+
+    // Crée un label encadré en vert
+    private static JLabel creerLabelVert(String texte, Color couleur) {
+        JLabel label = new JLabel(texte);
+        label.setOpaque(true);
+        label.setBackground(couleur);
+        label.setForeground(Color.WHITE);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+        return label;
     }
 
     private static void AfficherFenetreMethodesDePaiement() {
         JFrame FenetreMethodesDePaiement = new JFrame("Méthode de Paiement");
         FenetreMethodesDePaiement.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        FenetreMethodesDePaiement.setSize(400, 300);
-        FenetreMethodesDePaiement.setLayout(new GridLayout(ListeDesMethodesDePaiement.length + 1, 1));
+        FenetreMethodesDePaiement.setSize(1000, 600);
+        FenetreMethodesDePaiement.setLocationRelativeTo(null);
+
+        ImageIcon imageDeFond = new ImageIcon("payement.png");
+        JLabel labelImageFond = new JLabel(imageDeFond);
+        labelImageFond.setBounds(0, 0, 1000, 600);
+
+        JPanel panelMethode = new JPanel(new GridLayout(ListeDesMethodesDePaiement.length + 2, 1, 5, 5));
+        panelMethode.setOpaque(false);
+        panelMethode.setBounds(300, 100, 400, 300);
+
+        JLabel titre = new JLabel("Choisissez un moyen de paiement");
+        titre.setFont(new Font("SansSerif", Font.BOLD, 20));
+        titre.setHorizontalAlignment(SwingConstants.CENTER);
+        titre.setForeground(Color.BLACK);
+        titre.setBounds(300, 65, 400, 30);
 
         ButtonGroup GroupePourMethodes = new ButtonGroup();
         JRadioButton[] BoutonsPourMethodes = new JRadioButton[ListeDesMethodesDePaiement.length];
 
         for (int i = 0; i < ListeDesMethodesDePaiement.length; i++) {
             BoutonsPourMethodes[i] = new JRadioButton(ListeDesMethodesDePaiement[i]);
+            BoutonsPourMethodes[i].setOpaque(true);
+            BoutonsPourMethodes[i].setBackground(new Color(200, 255, 200));
             GroupePourMethodes.add(BoutonsPourMethodes[i]);
-            FenetreMethodesDePaiement.add(BoutonsPourMethodes[i]);
+            panelMethode.add(BoutonsPourMethodes[i]);
         }
 
         JButton BoutonSuivantPourMethodes = new JButton("Suivant");
-        FenetreMethodesDePaiement.add(BoutonSuivantPourMethodes);
+        BoutonSuivantPourMethodes.setBackground(new Color(100, 149, 237)); // Bleu
+        BoutonSuivantPourMethodes.setForeground(Color.WHITE);
+        BoutonSuivantPourMethodes.setFocusPainted(false);
+        panelMethode.add(BoutonSuivantPourMethodes);
+
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setPreferredSize(new Dimension(1000, 600));
+        layeredPane.add(labelImageFond, Integer.valueOf(0));
+        layeredPane.add(titre, Integer.valueOf(1));
+        layeredPane.add(panelMethode, Integer.valueOf(1));
+
+        FenetreMethodesDePaiement.setContentPane(layeredPane);
 
         BoutonSuivantPourMethodes.addActionListener(e -> {
             for (JRadioButton btn : BoutonsPourMethodes) {
@@ -95,75 +176,114 @@ public class EcranPayement {
         FenetreMethodesDePaiement.setVisible(true);
     }
 
+    private static JLabel creerLabelStylise(String texte, Color couleurFond) {
+        JLabel label = new JLabel(texte);
+        label.setOpaque(true);
+        label.setBackground(couleurFond);
+        label.setHorizontalAlignment(SwingConstants.RIGHT);
+        return label;
+    }
+
     private static void AfficherFenetreDetailsPaiement(String Methode) {
         JFrame FenetreDetailsDePaiement = new JFrame("Détails de Paiement");
         FenetreDetailsDePaiement.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        FenetreDetailsDePaiement.setSize(400, 300);
-        FenetreDetailsDePaiement.setLayout(new GridLayout(6, 2, 5, 5));
+        FenetreDetailsDePaiement.setSize(1000, 600);
+        FenetreDetailsDePaiement.setLocationRelativeTo(null);
+
+        // Fond
+        ImageIcon fond = new ImageIcon("dollars.jpg");
+        JLabel imageFond = new JLabel(fond);
+        imageFond.setBounds(0, 0, 1000, 600);
+
+        // Titre
+        JLabel titre = new JLabel("Entrez les détails de paiement", SwingConstants.CENTER);
+        titre.setFont(new Font("Arial", Font.BOLD, 24));
+        titre.setForeground(Color.BLACK);
+        titre.setBounds(250, 40, 500, 30);
 
         boolean EstCrypto = Methode.equals("Cryptomonnaie");
 
-        JComboBox<String> ListeCryptomonnaiesPourSelection = new JComboBox<>(ListeDesCryptomonnaies);
-        JTextField ChampPourNumeroDeCarte = CreerChampFormateAvecEspaces("#### #### #### ####");
-        JTextField ChampPourNomDuProprietaire = new JTextField();
-        JTextField ChampPourDateDeValidite = EstCrypto ? null : CreerChampFormate("##/##");
-        JFormattedTextField ChampPourCodeCVV = CreerChampFormateCVV("###");
+        JComboBox<String> ListeCrypto = new JComboBox<>(ListeDesCryptomonnaies);
+        JTextField ChampNom = new JTextField();
+        JTextField ChampCarte = CreerChampFormateAvecEspaces("#### #### #### ####");
+        JTextField ChampDate = EstCrypto ? null : CreerChampFormate("##/##");
+        JTextField ChampCVV = CreerChampFormateCVV("###");
+
+        // Panel du formulaire
+        JPanel panelFormulaire = new JPanel(new GridLayout(6, 2, 10, 10));
+        panelFormulaire.setOpaque(false);
+        panelFormulaire.setBounds(200, 100, 600, 300);
+
+        // Méthode utilitaire pour styliser les labels
+        java.util.function.Function<String, JLabel> labelVert = text -> {
+            JLabel label = new JLabel(text);
+            label.setOpaque(true);
+            label.setBackground(new Color(144, 238, 144)); // vert clair
+            label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            return label;
+        };
 
         if (EstCrypto) {
-            FenetreDetailsDePaiement.add(new JLabel("Crypto :"));
-            FenetreDetailsDePaiement.add(ListeCryptomonnaiesPourSelection);
-
-            FenetreDetailsDePaiement.add(new JLabel("Nom du Propriétaire :"));
-            FenetreDetailsDePaiement.add(ChampPourNomDuProprietaire);
-
-            FenetreDetailsDePaiement.add(new JLabel("Numéro de Compte :"));
-            FenetreDetailsDePaiement.add(ChampPourNumeroDeCarte);
-
-            FenetreDetailsDePaiement.add(new JLabel("Code Crypto :"));
-            FenetreDetailsDePaiement.add(ChampPourCodeCVV);
+            panelFormulaire.add(labelVert.apply("Crypto :"));
+            panelFormulaire.add(ListeCrypto);
+            panelFormulaire.add(labelVert.apply("Nom du Propriétaire :"));
+            panelFormulaire.add(ChampNom);
+            panelFormulaire.add(labelVert.apply("Numéro de Compte :"));
+            panelFormulaire.add(ChampCarte);
+            panelFormulaire.add(labelVert.apply("Code Crypto :"));
+            panelFormulaire.add(ChampCVV);
         } else {
-            FenetreDetailsDePaiement.add(new JLabel("Nom du Propriétaire :"));
-            FenetreDetailsDePaiement.add(ChampPourNomDuProprietaire);
-
-            FenetreDetailsDePaiement.add(new JLabel("Numéro de Carte :"));
-            FenetreDetailsDePaiement.add(ChampPourNumeroDeCarte);
-
-            FenetreDetailsDePaiement.add(new JLabel("Code CVV :"));
-            FenetreDetailsDePaiement.add(ChampPourCodeCVV);
-
-            FenetreDetailsDePaiement.add(new JLabel("Date de Validité :"));
-            FenetreDetailsDePaiement.add(ChampPourDateDeValidite);
+            panelFormulaire.add(labelVert.apply("Nom du Propriétaire :"));
+            panelFormulaire.add(ChampNom);
+            panelFormulaire.add(labelVert.apply("Numéro de Carte :"));
+            panelFormulaire.add(ChampCarte);
+            panelFormulaire.add(labelVert.apply("Code CVV :"));
+            panelFormulaire.add(ChampCVV);
+            panelFormulaire.add(labelVert.apply("Date de Validité :"));
+            panelFormulaire.add(ChampDate);
         }
 
+        JButton boutonValider = new JButton("Valider le Paiement");
+        boutonValider.setBackground(new Color(0, 120, 215));
+        boutonValider.setForeground(Color.WHITE);
+        boutonValider.setFont(new Font("Arial", Font.BOLD, 14));
+        boutonValider.setFocusPainted(false);
 
-        JButton BoutonValiderPaiement = new JButton("Valider le Paiement");
-        FenetreDetailsDePaiement.add(new JLabel());
-        FenetreDetailsDePaiement.add(BoutonValiderPaiement);
+        panelFormulaire.add(new JLabel());
+        panelFormulaire.add(boutonValider);
 
-        BoutonValiderPaiement.addActionListener(e -> {
-            String NomDuProprietaire = ChampPourNomDuProprietaire.getText().trim().toUpperCase();
-            ChampPourNomDuProprietaire.setText(NomDuProprietaire);
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setPreferredSize(new Dimension(1000, 600));
+        layeredPane.add(imageFond, Integer.valueOf(0));
+        layeredPane.add(titre, Integer.valueOf(1));
+        layeredPane.add(panelFormulaire, Integer.valueOf(1));
 
-            String NumeroDeCarteBrut = ChampPourNumeroDeCarte.getText().replaceAll("[^0-9]", "");
-            String CodeCryptoBrut = ChampPourCodeCVV.getText().trim();
+        FenetreDetailsDePaiement.setContentPane(layeredPane);
 
-            if (NomDuProprietaire.isEmpty()) {
+        boutonValider.addActionListener(e -> {
+            String nom = ChampNom.getText().trim().toUpperCase();
+            ChampNom.setText(nom);
+
+            String numero = ChampCarte.getText().replaceAll("[^0-9]", "");
+            String cvv = ChampCVV.getText().trim();
+
+            if (nom.isEmpty()) {
                 JOptionPane.showMessageDialog(FenetreDetailsDePaiement, "Le nom du propriétaire est requis.");
                 return;
             }
 
-            if (NumeroDeCarteBrut.length() != 16) {
+            if (numero.length() != 16) {
                 JOptionPane.showMessageDialog(FenetreDetailsDePaiement, EstCrypto ? "Le numéro de compte doit contenir 16 chiffres." : "Le numéro de carte doit contenir 16 chiffres.");
                 return;
             }
 
-            if (CodeCryptoBrut.length() != 3) {
-                JOptionPane.showMessageDialog(FenetreDetailsDePaiement, EstCrypto ? "Le code crypto doit contenir exactement 3 caractères." : "Le code CVV doit contenir exactement 3 chiffres.");
+            if (cvv.length() != 3) {
+                JOptionPane.showMessageDialog(FenetreDetailsDePaiement, EstCrypto ? "Le code crypto doit contenir 3 caractères." : "Le code CVV doit contenir 3 chiffres.");
                 return;
             }
 
-            if (!EstCrypto && (ChampPourDateDeValidite.getText().contains(" ") || !ChampPourDateDeValidite.getText().matches("\\d{2}/\\d{2}"))) {
-                JOptionPane.showMessageDialog(FenetreDetailsDePaiement, "La date de validité est incomplète ou invalide.");
+            if (!EstCrypto && (ChampDate.getText().contains(" ") || !ChampDate.getText().matches("\\d{2}/\\d{2}"))) {
+                JOptionPane.showMessageDialog(FenetreDetailsDePaiement, "La date de validité est invalide.");
                 return;
             }
 
@@ -171,8 +291,10 @@ public class EcranPayement {
             FenetreDetailsDePaiement.dispose();
         });
 
+        FenetreDetailsDePaiement.pack();
         FenetreDetailsDePaiement.setVisible(true);
     }
+
 
 
 
