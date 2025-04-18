@@ -1,1 +1,7 @@
-
+public class PanierItem {
+    private int articleId;
+    private String nom;
+    private double prixUnitaire;
+    private double prixVrac;
+    private int quantiteVrac;
+    private int quantite;
