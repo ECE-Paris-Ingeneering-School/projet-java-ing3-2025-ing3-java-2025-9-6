@@ -27,6 +27,28 @@ public class PanierController {
             return false;
         }
 
+        try {
+            conn.setAutoCommit(false);
+
+            double totalCommande = 0;
+            for (PanierItem item : panier) {
+                totalCommande += item.calculerPrixTotal();
+            }
+
+            String insertCommande = "INSERT INTO Commande (client_id, total) VALUES (?, ?)";
+            int commandeId;
+
+            try (PreparedStatement stmt = conn.prepareStatement(insertCommande, Statement.RETURN_GENERATED_KEYS)) {
+                stmt.setInt(1, user.getId());
+                stmt.setDouble(2, totalCommande);
+                stmt.executeUpdate();
+                ResultSet rs = stmt.getGeneratedKeys();
+                if (rs.next()) {
+                    commandeId = rs.getInt(1);
+                } else {
+                    throw new SQLException("Impossible de récupérer l'ID de la commande.");
+                }
+            }
 
     }
 }
