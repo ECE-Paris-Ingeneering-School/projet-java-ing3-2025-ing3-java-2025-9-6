@@ -14,3 +14,19 @@ public class PanierItem {
         this.quantiteVrac = quantiteVrac;
         this.quantite = quantite;
     }
+
+    public int getArticleId() {
+        return articleId;
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public double getPrixUnitaire() {
+        return prixUnitaire;
+    }
+
+    public double getPrixVrac() {
+        return prixVrac;
+    }
