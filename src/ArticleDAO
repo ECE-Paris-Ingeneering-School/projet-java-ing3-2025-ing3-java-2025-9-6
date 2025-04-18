@@ -6,3 +6,19 @@ import java.util.List;
 
 public class ArticleDAO {
     private Connection connection;
+
+    public ArticleDAO(Connection connection) {
+        this.connection = connection;
+    }
+
+    public List<String> getAllArticles() {
+        List<String> articles = new ArrayList<>();
+        String sql = "SELECT * FROM article";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                String articleInfo = rs.getInt("id") + " - " + rs.getString("nom") + " (" + rs.getString("marque") + "), Prix: " + rs.getDouble("prix_unitaire") + "€";
+                articles.add(articleInfo);
+            }
