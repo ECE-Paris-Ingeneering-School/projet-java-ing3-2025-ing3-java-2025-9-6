@@ -8,3 +8,18 @@ public class CommandeDAO {
     public CommandeDAO(Connection connection) {
         this.connection = connection;
     }
+
+    public int getNombreCommandesDerniers3Mois(int clientId) {
+        String sql = "SELECT COUNT(*) FROM Commande WHERE client_id = ? AND date_commande >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, clientId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+}
