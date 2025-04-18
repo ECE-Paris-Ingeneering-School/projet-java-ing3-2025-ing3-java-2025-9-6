@@ -5,3 +5,12 @@ public class PanierItem {
     private double prixVrac;
     private int quantiteVrac;
     private int quantite;
+
+    public PanierItem(int articleId, String nom, double prixUnitaire, double prixVrac, int quantiteVrac, int quantite) {
+        this.articleId = articleId;
+        this.nom = nom;
+        this.prixUnitaire = prixUnitaire;
+        this.prixVrac = prixVrac;
+        this.quantiteVrac = quantiteVrac;
+        this.quantite = quantite;
+    }
