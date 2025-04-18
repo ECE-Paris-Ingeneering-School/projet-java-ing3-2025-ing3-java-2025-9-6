@@ -13,3 +13,6 @@ public class Commande {
     // Getters et setters
     public int getId() { return id; }
     public int getClientId() { return clientId; }
+    public Date getDateCommande() { return dateCommande; }
+    public List<Article> getArticles() { return articles; }
+}
