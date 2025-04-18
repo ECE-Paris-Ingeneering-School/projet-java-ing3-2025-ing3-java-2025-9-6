@@ -1,14 +1,23 @@
+package dao;
+
+import model.Commande;
+import model.Article;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import java.time.LocalDate;
 
-public class CommandeDAO {
+public class CommandeDAO implements ICommandeDAO {
     private Connection connection;
 
     public CommandeDAO(Connection connection) {
         this.connection = connection;
     }
 
+    @Override
     public int getNombreCommandesDerniers3Mois(int clientId) {
         String sql = "SELECT COUNT(*) FROM Commande WHERE client_id = ? AND date_commande >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -18,6 +27,44 @@ public class CommandeDAO {
                 return rs.getInt(1);
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public List<Commande> getCommandesByClientId(int clientId) {
+        List<Commande> commandes = new ArrayList<>();
+        String sql = "SELECT * FROM Commande WHERE client_id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, clientId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                java.util.Date dateCommande = rs.getDate("date_commande");
+                // Pour simplifier, on assume que les articles sont récupérés d'une autre méthode
+                List<Article> articles = new ArrayList<>(); // À remplacer par un appel à un autre DAO ou une méthode
+
+                Commande commande = new Commande(id, clientId, dateCommande, articles);
+                commandes.add(commande);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return commandes;
+    }
+
+    public int getNombreCommandesDepuis(int clientId, LocalDate since) {
+        String sql = "SELECT COUNT(*) AS nbCommandes FROM Commande WHERE client_id = ? AND date_commande >= ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, clientId);
+            stmt.setDate(2, java.sql.Date.valueOf(since));
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("nbCommandes");
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return 0;
