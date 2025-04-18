@@ -7,3 +7,6 @@ public class Session {
     public static User getUser() {
         return currentUser;
     }
+    public static int getUserId() {
+        return currentUser != null ? currentUser.getId() : -1;
+    }
