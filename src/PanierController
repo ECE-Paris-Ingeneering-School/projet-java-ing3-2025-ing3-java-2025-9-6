@@ -1,0 +1,25 @@
+package controller;
+
+import model.PanierItem;
+import model.User;
+import dao.DatabaseConnection;
+
+import javax.swing.*;
+import java.sql.*;
+import java.util.List;
+
+public class PanierController {
+
+    public static boolean validerCommande(List<PanierItem> panier, User user) {
+        if (panier == null || panier.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Votre panier est vide !");
+            return false;
+        }
+
+        if (user == null) {
+            JOptionPane.showMessageDialog(null, "Aucun utilisateur connecté !");
+            return false;
+        }
+
+    }
+}
