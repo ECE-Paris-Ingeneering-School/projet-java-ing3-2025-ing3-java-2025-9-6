@@ -42,3 +42,13 @@ public class PanierItem {
     public void incrementQuantite() {
         this.quantite++;
     }
+
+    public double calculerPrixTotal() {
+        if (quantiteVrac > 0 && prixVrac > 0 && quantite >= quantiteVrac) {
+            int groupesVrac = quantite / quantiteVrac;
+            int reste = quantite % quantiteVrac;
+            return (groupesVrac * prixVrac) + (reste * prixUnitaire);
+        } else {
+            return quantite * prixUnitaire;
+        }
+    }
