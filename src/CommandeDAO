@@ -69,4 +69,60 @@ public class CommandeDAO implements ICommandeDAO {
         }
         return 0;
     }
+    //début des ajouts
+    public List<Commande> getHistoriqueCommandes(int clientId) throws SQLException {
+        List<Commande> commandes = new ArrayList<>();
+       
+        String sql = "SELECT c.id, c.date_commande, c.note, c.montant_total, c.statut, " +
+                     "a.id as article_id, a.nom as article_nom, lc.quantite, a.prix " +
+                     "FROM commande c " +
+                     "JOIN ligne_commande lc ON c.id = lc.commande_id " +
+                     "JOIN article a ON lc.article_id = a.id " +
+                     "WHERE c.client_id = ? " +
+                     "ORDER BY c.date_commande DESC";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, clientId);
+            ResultSet rs = stmt.executeQuery();
+
+            Map<Integer, Commande> commandesMap = new HashMap<>();
+           
+            while (rs.next()) {
+                int commandeId = rs.getInt("id");
+                Commande commande = commandesMap.get(commandeId);
+
+                if (commande == null) {
+                    commande = new Commande(
+                        commandeId,
+                        clientId,
+                        rs.getTimestamp("date_commande").toLocalDateTime(),
+                        new ArrayList<>(),
+                        rs.getString("note"),
+                        rs.getDouble("montant_total"),
+                        StatutCommande.valueOf(rs.getString("statut"))
+                    );
+                    commandesMap.put(commandeId, commande);
+                    commandes.add(commande);
+                }
+
+                LigneCommande ligne = new LigneCommande(
+                    rs.getInt("article_id"),
+                    rs.getString("article_nom"),
+                    rs.getInt("quantite"),
+                    rs.getDouble("prix")
+                );
+                commande.getLignes().add(ligne);
+            }
+        }
+        return commandes;
+    }
+
+    public boolean ajouterNoteACommande(int commandeId, String note) throws SQLException {
+        String sql = "UPDATE commande SET note = ? WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, note);
+            stmt.setInt(2, commandeId);
+            return stmt.executeUpdate() > 0;
+        }
+    }
 }
