@@ -1,1 +1,5 @@
-
+public class Commande {
+    private int id;
+    private int clientId;
+    private Date dateCommande;
+    private List<Article> articles;
