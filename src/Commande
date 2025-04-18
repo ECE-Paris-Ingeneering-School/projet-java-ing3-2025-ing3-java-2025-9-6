@@ -3,3 +3,5 @@ public class Commande {
     private int clientId;
     private Date dateCommande;
     private List<Article> articles;
+
+    public Commande(int id, int clientId, Date dateCommande, List<Article> articles)
