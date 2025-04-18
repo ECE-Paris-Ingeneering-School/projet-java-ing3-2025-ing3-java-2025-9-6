@@ -4,4 +4,9 @@ public class Commande {
     private Date dateCommande;
     private List<Article> articles;
 
-    public Commande(int id, int clientId, Date dateCommande, List<Article> articles)
+    public Commande(int id, int clientId, Date dateCommande, List<Article> articles){
+        this.id = id;
+        this.clientId = clientId;
+        this.dateCommande = dateCommande;
+        this.articles = articles;
+    }
