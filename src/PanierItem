@@ -52,3 +52,10 @@ public class PanierItem {
             return quantite * prixUnitaire;
         }
     }
+
+    @Override
+    public String toString() {
+        return nom + " x" + quantite + " (PU: " + prixUnitaire + "€, Vrac: " +
+                quantiteVrac + " pour " + prixVrac + "€)";
+    }
+}
