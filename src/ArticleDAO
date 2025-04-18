@@ -22,3 +22,9 @@ public class ArticleDAO {
                 String articleInfo = rs.getInt("id") + " - " + rs.getString("nom") + " (" + rs.getString("marque") + "), Prix: " + rs.getDouble("prix_unitaire") + "€";
                 articles.add(articleInfo);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return articles;
+    }
+}
