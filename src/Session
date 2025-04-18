@@ -10,3 +10,6 @@ public class Session {
     public static int getUserId() {
         return currentUser != null ? currentUser.getId() : -1;
     }
+    public static boolean isAdmin() {
+        return currentUser != null && currentUser.isAdmin();
+    }
