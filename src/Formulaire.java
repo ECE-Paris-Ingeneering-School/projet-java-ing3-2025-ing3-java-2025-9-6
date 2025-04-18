@@ -17,56 +17,144 @@ class RegistrationWindow extends JFrame {
 
     public RegistrationWindow() {
         setTitle("Formulaire d'Inscription");
-        setSize(400, 300);
+        setSize(1000, 600);
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(8, 2)); // Augmenter le nombre de lignes pour le bouton suivant
+        setResizable(false);
 
-        add(new JLabel("Username:"));
+        // Image de fond
+        ImageIcon backgroundImage = new ImageIcon("i.png"); // Remplace par ton image
+        Image image = backgroundImage.getImage();
+        Image scaledImage = image.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
+        JLabel background = new JLabel(new ImageIcon(scaledImage));
+        background.setLayout(new BorderLayout());
+        setContentPane(background);
+
+        JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(40, 300, 40, 300));
+        background.add(panel, BorderLayout.CENTER);
+
+        // Titre
+        JLabel titre = new JLabel("Formulaire d'Inscription", SwingConstants.CENTER);
+        titre.setFont(new Font("Segoe UI", Font.BOLD, 32));
+        titre.setForeground(new Color(30, 30, 30));
+        titre.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(titre);
+        panel.add(Box.createVerticalStrut(30));
+
+        // Champs
         usernameField = new JTextField();
-        add(usernameField);
+        styliserChamp(panel, "Nom d'utilisateur :", usernameField);
 
-        add(new JLabel("Email:"));
         emailField = new JTextField();
-        add(emailField);
+        styliserChamp(panel, "Email :", emailField);
 
-        add(new JLabel("Password:"));
         passwordField = new JPasswordField();
-        add(passwordField);
+        styliserChamp(panel, "Mot de passe :", passwordField);
 
-        showPasswordButton = new JButton("👁");
-        add(showPasswordButton);
+        // Bouton afficher mot de passe
+        showPasswordButton = new JButton("Rendre visible le mot de passe");
+        showPasswordButton.setBackground(new Color(70, 130, 180));
+        showPasswordButton.setForeground(Color.WHITE);
+        showPasswordButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        showPasswordButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        showPasswordButton.setFocusable(false);
+        panel.add(showPasswordButton);
 
-        registerButton = new JButton("S'inscrire");
-        add(registerButton);
-
-        errorLabel = new JLabel("", SwingConstants.CENTER);
-        errorLabel.setForeground(Color.RED);
-        add(errorLabel);
-
-        nextButton = new JButton("Nouvelle inscription ");
-        nextButton.setVisible(false); // Cacher le bouton au début
-        add(nextButton);
-
-        // Action pour le bouton d'inscription
-        registerButton.addActionListener(e -> validateForm());
-
-        // Action pour afficher/masquer le mot de passe
         showPasswordButton.addMouseListener(new MouseAdapter() {
-            @Override
             public void mousePressed(MouseEvent e) {
-                passwordField.setEchoChar((char) 0); // Afficher le mot de passe
+                passwordField.setEchoChar((char) 0);
             }
 
-            @Override
             public void mouseReleased(MouseEvent e) {
-                passwordField.setEchoChar('*'); // Masquer le mot de passe
+                passwordField.setEchoChar('*');
             }
         });
 
-        // Action pour le bouton "Nouvelle inscription"
+        panel.add(Box.createVerticalStrut(15));
+
+        // Bouton s'inscrire
+        registerButton = new JButton("S'inscrire");
+        registerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        registerButton.setFocusable(false);
+        registerButton.setBackground(new Color(34, 139, 34));
+        registerButton.setForeground(Color.WHITE);
+        registerButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        panel.add(registerButton);
+        registerButton.addActionListener(e -> validateForm());
+
+        panel.add(Box.createVerticalStrut(10));
+
+        // Message d'erreur ou de succès
+        errorLabel = new JLabel("", SwingConstants.CENTER);
+        errorLabel.setForeground(Color.RED);
+        errorLabel.setFont(new Font("Segoe UI", Font.BOLD, 16)); // Gras et plus grand
+        errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(errorLabel);
+
+        // Nouvelle inscription
+        nextButton = createButton("Nouvelle inscription");
+        nextButton.setVisible(false);
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(nextButton);
         nextButton.addActionListener(e -> resetForm());
 
         setVisible(true);
+    }
+
+    private void styliserChamp(JPanel panel, String labelTexte, JTextField field) {
+        // Conteneur pour le label avec fond vert clair
+        JPanel labelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        labelPanel.setBackground(new Color(200, 255, 200)); // Vert clair
+        labelPanel.setMaximumSize(new Dimension(300, 35));
+        labelPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(150, 200, 150)),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+        labelPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel label = new JLabel(labelTexte);
+        label.setForeground(new Color(30, 30, 30));
+        label.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        labelPanel.add(label);
+
+        panel.add(labelPanel);
+        panel.add(Box.createVerticalStrut(5));
+
+        // Champ de saisie en dessous, hors du rectangle vert
+        field.setMaximumSize(new Dimension(300, 35));
+        field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        field.setHorizontalAlignment(JTextField.CENTER);
+        field.setBorder(BorderFactory.createLineBorder(new Color(180, 180, 180)));
+        field.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        panel.add(field);
+        panel.add(Box.createVerticalStrut(15));
+    }
+
+    private JButton createButton(String text) {
+        JButton button = new JButton(text);
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        button.setBackground(new Color(70, 130, 180));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setBorder(BorderFactory.createEmptyBorder(8, 20, 8, 20));
+
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(new Color(60, 120, 170));
+            }
+
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(new Color(70, 130, 180));
+            }
+        });
+
+        return button;
     }
 
     private void validateForm() {
@@ -74,32 +162,30 @@ class RegistrationWindow extends JFrame {
         String email = emailField.getText();
         String password = new String(passwordField.getPassword());
 
-        // Validation du username
         if (!username.matches("^[^\\s]{2,}$")) {
-            errorLabel.setText("Username invalide (min. 2 caractères, sans espace)");
+            errorLabel.setForeground(Color.RED);
+            errorLabel.setText("Nom d'utilisateur invalide (2+ caractères sans espace)");
             return;
         }
 
-        // Validation de l'email
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
         if (!Pattern.matches(emailRegex, email)) {
+            errorLabel.setForeground(Color.RED);
             errorLabel.setText("Email invalide");
             return;
         }
 
-        // Validation du mot de passe
         String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$";
         if (!Pattern.compile(passwordRegex).matcher(password).matches()) {
+            errorLabel.setForeground(Color.RED);
             errorLabel.setText("Mot de passe invalide (8+ caractères, 1 maj, 1 min, 1 chiffre)");
             return;
         }
 
-        // Si tout est valide
-        errorLabel.setForeground(Color.GREEN);
+        errorLabel.setForeground(new Color(0, 128, 0));
         errorLabel.setText("Inscription réussie !");
-        nextButton.setVisible(true); // Afficher le bouton "Nouvelle inscription"
+        nextButton.setVisible(true);
 
-        // Désactiver tous les champs et le bouton d'inscription
         usernameField.setEnabled(false);
         emailField.setEnabled(false);
         passwordField.setEnabled(false);
@@ -108,15 +194,13 @@ class RegistrationWindow extends JFrame {
     }
 
     private void resetForm() {
-        // Réinitialisation des champs
         usernameField.setText("");
         emailField.setText("");
         passwordField.setText("");
         errorLabel.setText("");
         errorLabel.setForeground(Color.RED);
-        nextButton.setVisible(false); // Cacher le bouton "Nouvelle inscription"
+        nextButton.setVisible(false);
 
-        // Réactiver tous les champs et le bouton d'inscription
         usernameField.setEnabled(true);
         emailField.setEnabled(true);
         passwordField.setEnabled(true);
