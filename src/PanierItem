@@ -30,3 +30,15 @@ public class PanierItem {
     public double getPrixVrac() {
         return prixVrac;
     }
+
+    public int getQuantiteVrac() {
+        return quantiteVrac;
+    }
+
+    public int getQuantite() {
+        return quantite;
+    }
+
+    public void incrementQuantite() {
+        this.quantite++;
+    }
