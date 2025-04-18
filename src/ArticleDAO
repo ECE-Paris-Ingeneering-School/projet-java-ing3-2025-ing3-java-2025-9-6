@@ -1,30 +1,130 @@
+package dao;
+
+import model.Article;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArticleDAO {
+public class ArticleDAO implements IArticleDAO {
     private Connection connection;
 
     public ArticleDAO(Connection connection) {
         this.connection = connection;
     }
 
-    public List<String> getAllArticles() {
-        List<String> articles = new ArrayList<>();
+    @Override
+    public List<Article> getAllArticles() {
+        List<Article> articles = new ArrayList<>();
         String sql = "SELECT * FROM article";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                String articleInfo = rs.getInt("id") + " - " + rs.getString("nom") + " (" + rs.getString("marque") + "), Prix: " + rs.getDouble("prix_unitaire") + "€";
-                articles.add(articleInfo);
+                articles.add(mapResultSetToArticle(rs));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return articles;
+    }
+
+    @Override
+    public Article getArticleById(int id) {
+        Article article = null;
+        String sql = "SELECT * FROM article WHERE id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                article = mapResultSetToArticle(rs);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return article;
+    }
+
+    // méthode à ajouter dans ta classe ArticleDAO
+    public List<Article> getArticlesByMarque(String marque) {
+        List<Article> articles = new ArrayList<>();
+        String sql = "SELECT * FROM Article WHERE marque LIKE ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, "%" + marque + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                articles.add(mapResultSetToArticle(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return articles;
+    }
+
+    // Permettre l'ajout d'article
+    @Override
+    public void addArticle(Article article) {
+        String sql = "INSERT INTO article(nom, marque, prix_unitaire, stock, prix_vrac, quantite_vrac) VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, article.getNom());
+            stmt.setString(2, article.getMarque());
+            stmt.setDouble(3, article.getPrixUnitaire());
+            stmt.setInt(4, article.getStock());
+            stmt.setDouble(5, article.getPrixVrac());
+            stmt.setInt(6, article.getQuantiteVrac());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Modifier un article
+    @Override
+    public void updateArticle(Article article) {
+        String sql = "UPDATE article SET nom=?, marque=?, prix_unitaire=?, stock=?, prix_vrac=?, quantite_vrac=? WHERE id=?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, article.getNom());
+            stmt.setString(2, article.getMarque());
+            stmt.setDouble(3, article.getPrixUnitaire());
+            stmt.setInt(4, article.getStock());
+            stmt.setDouble(5, article.getPrixVrac());
+            stmt.setInt(6, article.getQuantiteVrac());
+            stmt.setInt(7, article.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Supprimer un article
+    @Override
+    public void deleteArticle(int id) {
+        String sql = "DELETE FROM article WHERE id=?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Infos des articles
+    private Article mapResultSetToArticle(ResultSet rs) throws SQLException {
+        return new Article(
+                rs.getInt("id"),
+                rs.getString("nom"),
+                rs.getString("marque"),
+                rs.getDouble("prix_unitaire"),
+                rs.getDouble("prix_vrac"),
+                rs.getInt("quantite_vrac"),
+                rs.getInt("stock")
+        );
     }
 }
