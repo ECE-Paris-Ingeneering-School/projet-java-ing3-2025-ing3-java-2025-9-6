@@ -80,6 +80,20 @@ public class PanierController {
                 stmt.executeBatch();
             }
 
+            conn.commit();
+            panier.clear();
+            JOptionPane.showMessageDialog(null, "Commande validée avec succès !");
+            return true;
+        } catch (SQLException e) {
+            try {
+                conn.rollback();
+            } catch (SQLException rollbackEx) {
+                rollbackEx.printStackTrace();
+            }
+            JOptionPane.showMessageDialog(null, "Erreur lors de la validation de la commande : " + e.getMessage());
+            return false;
+        
+
 
     }
 }
