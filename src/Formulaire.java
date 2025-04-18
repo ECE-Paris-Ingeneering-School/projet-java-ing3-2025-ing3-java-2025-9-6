@@ -23,29 +23,14 @@ class RegistrationWindow extends JFrame {
         setResizable(false);
 
         // Image de fond
-        // Charger l'image
         ImageIcon backgroundImage = new ImageIcon("i.png"); // Remplace par ton image
-        Image image = backgroundImage.getImage(); // Obtenir l'image
-        Image scaledImage = image.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH); // Redimensionner à la taille de la fenêtre
-
-// Créer un JLabel pour afficher l'image de fond
+        Image image = backgroundImage.getImage();
+        Image scaledImage = image.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
         JLabel background = new JLabel(new ImageIcon(scaledImage));
-        background.setLayout(new BorderLayout()); // Layout pour ajouter des composants par-dessus
-
-// Ajouter le JLabel en fond
+        background.setLayout(new BorderLayout());
         setContentPane(background);
 
-// Autres composants que tu ajoutes à la fenêtre
         JPanel panel = new JPanel();
-        panel.setOpaque(false); // Assure-toi que ce panel est transparent pour laisser voir l'image de fond
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-// Ajoute ton panel avec d'autres composants comme les champs et boutons
-        background.add(panel, BorderLayout.CENTER);
-
-
-
-
         panel.setOpaque(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createEmptyBorder(40, 300, 40, 300));
@@ -69,9 +54,10 @@ class RegistrationWindow extends JFrame {
         passwordField = new JPasswordField();
         styliserChamp(panel, "Mot de passe :", passwordField);
 
+        // Bouton afficher mot de passe
         showPasswordButton = new JButton("Rendre visible le mot de passe");
         showPasswordButton.setBackground(new Color(70, 130, 180));
-        showPasswordButton.setForeground(Color.WHITE);  // Couleur du texte (blanc)
+        showPasswordButton.setForeground(Color.WHITE);
         showPasswordButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         showPasswordButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         showPasswordButton.setFocusable(false);
@@ -79,14 +65,13 @@ class RegistrationWindow extends JFrame {
 
         showPasswordButton.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                passwordField.setEchoChar((char) 0);  // Afficher le mot de passe
+                passwordField.setEchoChar((char) 0);
             }
 
             public void mouseReleased(MouseEvent e) {
-                passwordField.setEchoChar('*');  // Masquer le mot de passe
+                passwordField.setEchoChar('*');
             }
         });
-
 
         panel.add(Box.createVerticalStrut(15));
 
@@ -95,17 +80,17 @@ class RegistrationWindow extends JFrame {
         registerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         registerButton.setFocusable(false);
         registerButton.setBackground(new Color(34, 139, 34));
-        registerButton.setForeground(Color.WHITE);  // Texte blanc
+        registerButton.setForeground(Color.WHITE);
         registerButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         panel.add(registerButton);
         registerButton.addActionListener(e -> validateForm());
 
         panel.add(Box.createVerticalStrut(10));
 
-        // Message
+        // Message d'erreur ou de succès
         errorLabel = new JLabel("", SwingConstants.CENTER);
         errorLabel.setForeground(Color.RED);
-        errorLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        errorLabel.setFont(new Font("Segoe UI", Font.BOLD, 16)); // Gras et plus grand
         errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(errorLabel);
 
@@ -120,20 +105,33 @@ class RegistrationWindow extends JFrame {
     }
 
     private void styliserChamp(JPanel panel, String labelTexte, JTextField field) {
+        // Conteneur pour le label avec fond vert clair
+        JPanel labelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        labelPanel.setBackground(new Color(200, 255, 200)); // Vert clair
+        labelPanel.setMaximumSize(new Dimension(300, 35));
+        labelPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(150, 200, 150)),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+        labelPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         JLabel label = new JLabel(labelTexte);
         label.setForeground(new Color(30, 30, 30));
         label.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(label);
+        labelPanel.add(label);
 
+        panel.add(labelPanel);
+        panel.add(Box.createVerticalStrut(5));
+
+        // Champ de saisie en dessous, hors du rectangle vert
         field.setMaximumSize(new Dimension(300, 35));
         field.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        field.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(180, 180, 180), 1),
-                BorderFactory.createEmptyBorder(5, 10, 5, 10)
-        ));
+        field.setHorizontalAlignment(JTextField.CENTER);
+        field.setBorder(BorderFactory.createLineBorder(new Color(180, 180, 180)));
+        field.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         panel.add(field);
-        panel.add(Box.createVerticalStrut(10));
+        panel.add(Box.createVerticalStrut(15));
     }
 
     private JButton createButton(String text) {
@@ -146,7 +144,6 @@ class RegistrationWindow extends JFrame {
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.setBorder(BorderFactory.createEmptyBorder(8, 20, 8, 20));
 
-        // Hover effect
         button.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
                 button.setBackground(new Color(60, 120, 170));
@@ -166,18 +163,21 @@ class RegistrationWindow extends JFrame {
         String password = new String(passwordField.getPassword());
 
         if (!username.matches("^[^\\s]{2,}$")) {
+            errorLabel.setForeground(Color.RED);
             errorLabel.setText("Nom d'utilisateur invalide (2+ caractères sans espace)");
             return;
         }
 
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
         if (!Pattern.matches(emailRegex, email)) {
+            errorLabel.setForeground(Color.RED);
             errorLabel.setText("Email invalide");
             return;
         }
 
         String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$";
         if (!Pattern.compile(passwordRegex).matcher(password).matches()) {
+            errorLabel.setForeground(Color.RED);
             errorLabel.setText("Mot de passe invalide (8+ caractères, 1 maj, 1 min, 1 chiffre)");
             return;
         }
@@ -207,5 +207,4 @@ class RegistrationWindow extends JFrame {
         registerButton.setEnabled(true);
         showPasswordButton.setEnabled(true);
     }
-
 }
