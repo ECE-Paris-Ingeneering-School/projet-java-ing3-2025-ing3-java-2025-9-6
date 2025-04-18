@@ -92,8 +92,12 @@ public class PanierController {
             }
             JOptionPane.showMessageDialog(null, "Erreur lors de la validation de la commande : " + e.getMessage());
             return false;
-        
-
-
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
