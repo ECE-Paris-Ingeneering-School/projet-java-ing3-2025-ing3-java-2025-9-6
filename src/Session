@@ -13,3 +13,7 @@ public class Session {
     public static boolean isAdmin() {
         return currentUser != null && currentUser.isAdmin();
     }
+    public static void logout() {
+        currentUser = null;
+    }
+}
