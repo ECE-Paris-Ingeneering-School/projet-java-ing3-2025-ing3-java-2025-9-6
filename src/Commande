@@ -6,15 +6,17 @@ public class Commande {
     private int clientId;
     private Date dateCommande;
     private List<Article> articles;
+    private List<LigneCommande> lignes;
     private String note;
     private double montantTotal;
     private StatutCommande statut;
 
-    public Commande(int id, int clientId, Date dateCommande, List<Article> articles, String note, double montantTotal, StatutCommande statut){
+    public Commande(int id, int clientId, Date dateCommande, List<Article> articles, List<LigneCommande> lignes, String note, double montantTotal, StatutCommande statut){
         this.id = id;
         this.clientId = clientId;
         this.dateCommande = dateCommande;
         this.articles = articles;
+        this.lignes = lignes;
         this.note = note;
         this.montantTotal = montantTotal;
         this.statut = statut;
