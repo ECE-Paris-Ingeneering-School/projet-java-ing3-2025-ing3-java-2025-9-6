@@ -50,5 +50,36 @@ public class PanierController {
                 }
             }
 
+            String insertCommandeArticle = "INSERT INTO Commande_Article (commande_id, article_id, quantite, prix_total) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(insertCommandeArticle)) {
+                for (PanierItem item : panier) {
+                    stmt.setInt(1, commandeId);
+                    stmt.setInt(2, item.getArticleId());
+                    stmt.setInt(3, item.getQuantite());
+                    stmt.setDouble(4, item.calculerPrixTotal());
+                    stmt.addBatch();
+                }
+                stmt.executeBatch();
+            }
+
+            String updateStats = "INSERT INTO Statistiques (article_id, ventes_totales, reductions_appliquees) " +
+                    "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE " +
+                    "ventes_totales = ventes_totales + VALUES(ventes_totales), " +
+                    "reductions_appliquees = reductions_appliquees + VALUES(reductions_appliquees)";
+            try (PreparedStatement stmt = conn.prepareStatement(updateStats)) {
+                for (PanierItem item : panier) {
+                    int reductions = 0;
+                    if (item.getQuantiteVrac() > 0 && item.getQuantite() >= item.getQuantiteVrac()) {
+                        reductions = (item.getQuantite() / item.getQuantiteVrac()) * item.getQuantiteVrac();
+                    }
+                    stmt.setInt(1, item.getArticleId());
+                    stmt.setInt(2, item.getQuantite());
+                    stmt.setInt(3, reductions);
+                    stmt.addBatch();
+                }
+                stmt.executeBatch();
+            }
+
+
     }
 }
