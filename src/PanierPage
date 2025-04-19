@@ -13,3 +13,11 @@ public class PanierPage extends JFrame {
     private JPanel panierPanel;
     private List<PanierItem> panierItems;
     private double totalPanier = 0;
+
+    public PanierPage(List<PanierItem> panierItems) {
+        this.panierItems = panierItems;
+
+        setTitle("Mon Panier");
+        setSize(500, 400);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLayout(new BorderLayout());
