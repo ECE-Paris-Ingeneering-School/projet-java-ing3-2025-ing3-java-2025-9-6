@@ -1,0 +1,11 @@
+package view;
+
+import controller.PanierController;
+import model.PanierItem;
+import model.User;
+import util.Session;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.List;
+
