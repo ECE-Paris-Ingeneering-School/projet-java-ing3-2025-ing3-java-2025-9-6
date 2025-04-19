@@ -9,3 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+public class PanierPage extends JFrame {
+    private JPanel panierPanel;
+    private List<PanierItem> panierItems;
+    private double totalPanier = 0;
