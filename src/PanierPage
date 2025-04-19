@@ -10,59 +10,76 @@ import java.awt.*;
 import java.util.List;
 
 public class PanierPage extends JFrame {
-    private JPanel panierPanel;
-    private List<PanierItem> panierItems;
-    private double totalPanier = 0;
+    private JPanel panierPanel; // Conteneur principal pour les articles du panier
+    private List<PanierItem> panierItems; // Liste des articles dans le panier
+    private double totalPanier = 0; // Total global du panier
 
     public PanierPage(List<PanierItem> panierItems) {
         this.panierItems = panierItems;
 
+        // Configuration de base de la fenêtre
         setTitle("Mon Panier");
         setSize(500, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout()); // Layout principal de la fenêtre
 
+        // Création d'un panel vertical pour afficher les articles
         panierPanel = new JPanel();
         panierPanel.setLayout(new BoxLayout(panierPanel, BoxLayout.Y_AXIS));
+
+        // On met ce panel dans un JScrollPane pour permettre le scroll si beaucoup d’articles
         add(new JScrollPane(panierPanel), BorderLayout.CENTER);
 
+        // Chargement dynamique des articles
         loadPanierItems();
 
+        // Bouton pour valider la commande
         JButton validerCommandeButton = new JButton("Valider la commande");
         validerCommandeButton.addActionListener(e -> {
-            User user = Session.get();
+            User user = Session.get(); // Récupère l’utilisateur actuellement connecté
+            // Envoie les données au contrôleur pour valider la commande
             if (PanierController.validerCommande(panierItems, user)) {
-                dispose(); // ferme la fenêtre actuelle
+                dispose(); // Ferme cette fenêtre
+                // Lance la fenêtre de paiement, avec un message à la fin
                 EcranPayement.lancerPaiement(() -> {
                     JOptionPane.showMessageDialog(null, "Commande confirmée et payée !");
                 });
             }
         });
 
+        // Ajout du bouton en bas de la fenêtre
         add(validerCommandeButton, BorderLayout.SOUTH);
-        setVisible(true);
+
+        setVisible(true); // Affiche la fenêtre
     }
 
+    // Fonction qui met à jour l’affichage des articles du panier
     private void loadPanierItems() {
-        totalPanier = 0;
-        panierPanel.removeAll();
+        totalPanier = 0; // Réinitialise le total
+        panierPanel.removeAll(); // Vide le panel pour le recharger
 
+        // Si le panier est vide
         if (panierItems.isEmpty()) {
             panierPanel.add(new JLabel("Votre panier est vide."));
         } else {
+            // Pour chaque article du panier
             for (PanierItem item : panierItems) {
-                double total = item.calculerPrixTotal();
-                totalPanier += total;
+                double total = item.calculerPrixTotal(); // Prix total pour cet article
+                totalPanier += total; // Ajout au total global
+
+                // Texte affiché pour chaque article
                 String itemInfo = item.getNom() + " (PU: " + item.getPrixUnitaire() +
                         "€, Qté: " + item.getQuantite() + ") ➜ Total: " +
                         String.format("%.2f", total) + "€";
-                panierPanel.add(new JLabel(itemInfo));
+                panierPanel.add(new JLabel(itemInfo)); // Ajout du label dans le panel
             }
-            panierPanel.add(Box.createVerticalStrut(10));
+
+            panierPanel.add(Box.createVerticalStrut(10)); // Espacement
+            // Affichage du total général du panier
             panierPanel.add(new JLabel("💰 Total du panier: " + totalPanier + "€"));
         }
 
-        panierPanel.revalidate();
-        panierPanel.repaint();
+        panierPanel.revalidate(); // Met à jour l'affichage
+        panierPanel.repaint();    // Force le rafraîchissement visuel
     }
 }
