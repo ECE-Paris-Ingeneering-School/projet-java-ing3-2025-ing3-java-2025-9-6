@@ -3,7 +3,6 @@ package view;
 import controller.PanierController;
 import model.PanierItem;
 import model.User;
-
 import util.Session;
 
 import javax.swing.*;
@@ -62,3 +61,8 @@ public class PanierPage extends JFrame {
             panierPanel.add(Box.createVerticalStrut(10));
             panierPanel.add(new JLabel("💰 Total du panier: " + totalPanier + "€"));
         }
+
+        panierPanel.revalidate();
+        panierPanel.repaint();
+    }
+}
