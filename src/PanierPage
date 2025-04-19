@@ -3,6 +3,7 @@ package view;
 import controller.PanierController;
 import model.PanierItem;
 import model.User;
+
 import util.Session;
 
 import javax.swing.*;
@@ -42,3 +43,22 @@ public class PanierPage extends JFrame {
         add(validerCommandeButton, BorderLayout.SOUTH);
         setVisible(true);
     }
+
+    private void loadPanierItems() {
+        totalPanier = 0;
+        panierPanel.removeAll();
+
+        if (panierItems.isEmpty()) {
+            panierPanel.add(new JLabel("Votre panier est vide."));
+        } else {
+            for (PanierItem item : panierItems) {
+                double total = item.calculerPrixTotal();
+                totalPanier += total;
+                String itemInfo = item.getNom() + " (PU: " + item.getPrixUnitaire() +
+                        "€, Qté: " + item.getQuantite() + ") ➜ Total: " +
+                        String.format("%.2f", total) + "€";
+                panierPanel.add(new JLabel(itemInfo));
+            }
+            panierPanel.add(Box.createVerticalStrut(10));
+            panierPanel.add(new JLabel("💰 Total du panier: " + totalPanier + "€"));
+        }
