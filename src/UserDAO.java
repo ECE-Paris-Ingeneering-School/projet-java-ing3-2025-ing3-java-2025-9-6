@@ -79,4 +79,40 @@ public class UserDAO implements UserDAOInterface {
             return false;
         }
     }
+
+    // 🔎 Récupérer un utilisateur par ID
+    public User getUserById(int id) {
+        String sql = "SELECT * FROM User WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new User(
+                        rs.getInt("id"),
+                        rs.getString("nom"),
+                        rs.getString("email"),
+                        "ancien".equalsIgnoreCase(rs.getString("type_client")),
+                        "admin".equalsIgnoreCase(rs.getString("role"))
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<Integer> getAllClientIds() {
+        List<Integer> ids = new ArrayList<>();
+        String sql = "SELECT id FROM User WHERE role = 'client'";
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                ids.add(rs.getInt("id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ids;
+    }
 }
