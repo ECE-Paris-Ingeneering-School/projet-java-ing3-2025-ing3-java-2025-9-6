@@ -136,4 +136,29 @@ public class UserDAO implements UserDAOInterface {
         }
         return null;
     }
+
+    @Override
+    public void updateClient(User client) {
+        String sql = "UPDATE User SET nom = ?, email = ?, type_client = ? WHERE id = ? AND role = 'client'";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, client.getNom());
+            stmt.setString(2, client.getEmail());
+            stmt.setString(3, client.isAncienClient() ? "ancien" : "nouveau");
+            stmt.setInt(4, client.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void deleteClient(int id) {
+        String sql = "DELETE FROM User WHERE id = ? AND role = 'client'";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
