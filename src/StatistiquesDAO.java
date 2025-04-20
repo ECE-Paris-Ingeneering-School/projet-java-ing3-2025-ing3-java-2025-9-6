@@ -45,4 +45,20 @@ public class StatistiquesDAO implements IStatistiquesDAO {
         }
         return top;
     }
+
+    @Override
+    public List<String> getReductionsAppliquees() {
+        List<String> reductions = new ArrayList<>();
+        try (PreparedStatement stmt = conn.prepareStatement(
+                "SELECT a.nom, s.reductions_appliquees " +
+                        "FROM Statistiques s JOIN Article a ON s.article_id = a.id");
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                reductions.add(rs.getString("nom") + " : " + rs.getInt("reductions_appliquees") + " fois");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reductions;
+    }
 }
