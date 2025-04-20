@@ -115,4 +115,25 @@ public class UserDAO implements UserDAOInterface {
         }
         return ids;
     }
+
+    @Override
+    public User getClientById(int id) {
+        String sql = "SELECT * FROM User WHERE id = ? AND role = 'client'";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new User(
+                        rs.getInt("id"),
+                        rs.getString("nom"),
+                        rs.getString("email"),
+                        "ancien".equalsIgnoreCase(rs.getString("type_client")),
+                        false // on sait que c'est un client ici
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
