@@ -61,4 +61,22 @@ public class UserDAO implements UserDAOInterface {
         }
         return null; // échec de connexion
     }
+
+    // 📝 Inscription
+    public boolean register(User user, String password) {
+        String sql = "INSERT INTO User (nom, email, password, type_client, role) VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, user.getNom());
+            stmt.setString(2, user.getEmail());
+            stmt.setString(3, password); // ⚠️ à chiffrer en prod !
+            stmt.setString(4, user.isAncienClient() ? "ancien" : "nouveau");
+            stmt.setString(5, "client");
+
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
