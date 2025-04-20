@@ -25,4 +25,24 @@ public class StatistiquesDAO implements IStatistiquesDAO {
         }
         return 0.0;
     }
+
+    @Override
+    public List<String> getTopArticles() {
+        List<String> top = new ArrayList<>();
+        try (PreparedStatement stmt = conn.prepareStatement(
+                "SELECT a.nom, SUM(ca.quantite) AS quantite_totale " +
+                        "FROM Article a " +
+                        "JOIN Commande_Article ca ON a.id = ca.article_id " +
+                        "GROUP BY a.nom " +
+                        "ORDER BY quantite_totale DESC " +
+                        "LIMIT 5");
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                top.add(rs.getString("nom") + " : " + rs.getInt("quantite_totale") + " unités");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return top;
+    }
 }
