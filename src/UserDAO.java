@@ -1,8 +1,11 @@
 package dao;
+
 import model.User;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 public class UserDAO implements UserDAOInterface {
     private final Connection connection;
 
@@ -33,5 +36,29 @@ public class UserDAO implements UserDAOInterface {
             e.printStackTrace();
         }
         return users;
+    }
+
+    // 🔐 Connexion (login)
+    public User getUserByEmailAndPassword(String email, String password) {
+        String sql = "SELECT * FROM User WHERE email = ? AND password = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            stmt.setString(2, password); // ⚠️ Plaintext pour l'instant, à sécuriser !
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new User(
+                        rs.getInt("id"),
+                        rs.getString("nom"),
+                        rs.getString("email"),
+                        "ancien".equalsIgnoreCase(rs.getString("type_client")),
+                        "administrateur".equalsIgnoreCase(rs.getString("role"))
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // échec de connexion
     }
 }
